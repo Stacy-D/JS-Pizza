@@ -1,3 +1,167 @@
-@mainColor: blue;
+@mainColor: pink;
 
 @import "pizza/pizza-card";
+
+@mainColor: #fffff5;
+@padding-top: 10%;
+@width-left: 75%;
+@width-right: 25%;
+.main-container{
+  background-color: @mainColor;
+}
+
+.right-panel{
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  background-color: #fff;
+  padding-top: @padding-top*0.4;
+  padding-right: 0;
+  padding-left: 0;
+  box-shadow: rgba(0,0,0,.2) -3px 3px 10px;
+  .order-btn-wrapper{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 10%;
+    width: 100%;
+    padding: 5%;
+    background-color: #fff;
+    .order-sum{
+      font-weight: bold;
+      margin-bottom: 15px;
+      .order-sum-text{
+        font-size: 13px;
+      }
+      .order-sum-amount{
+        font-size: 20px;
+        float: right;
+      }
+    }
+  }
+  .cart-top-line{
+    padding-left: 1%;
+    .cart-title{
+
+    }
+    .counter-color{
+        background-color: orange;
+    }
+    .empty-cart{
+      float: right;
+      font-size: 10px;
+    }
+  }
+  .cart-items{
+    background-color: #F5F5F5;
+    width: 100%;
+    height: 100%;
+    .no-items-cart{
+      padding: 20%;
+      text-align: center;
+    }
+  }
+}
+.left-panel{
+  padding-top: @padding-top;
+  .page-title{
+    text-align: center;
+    .counter-color{
+      background-color: orange;
+    }
+  }
+}
+
+.top-panel{
+  background: rgba(0,0,0,.8);
+  height: @padding-top*0.4;
+  z-index: 5;
+  .navbar-top-row{
+    border-bottom: 1px solid gray;
+    color:gray;
+  }
+  .btn-sign-up{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    float: right;
+  }
+  .navbar-site-icon{
+    border-right: 1px solid #d16301;
+    border-left: 1px solid #d16301;
+    position: fixed;
+    top: 0;
+    width: 100px;
+    height: 90px;
+    padding: 15px;
+    background-color: #ea862e;
+    z-index: 30;
+    text-align: center;
+    .navbar-href-wrapper {
+      .site-logo {
+        text-decoration: none;
+        color: #fff;
+        .logo-top {
+          font-size: 20px;
+        }
+        .logo-bottom {
+          font-size: 25px;
+        }
+      }
+    }
+    .sticker-elem{
+      position: fixed;
+      top: 90px;
+      left: 15px;
+      height: 11px;
+      width: 100px;
+      background-image: url(../images/discount.svg);
+      transform: scaleY(-1);
+      background-repeat: no-repeat;
+    }
+  }
+
+}
+.footer{
+  color: gray;
+  margin: 0;
+  background-color: #fff;
+  border-top: 1px solid #e5e5e5;
+  text-align: center;
+  width: @width-left;
+  padding: @padding-top;
+}
+.discount-sticker{
+  position: fixed;
+  bottom: 0;
+  left: 15px;
+  width: 100px;
+  padding: 15px;
+  font-size: 15px;
+  background-color: #ea862e;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  border-right: 1px solid #d16301;
+  border-left: 1px solid #d16301;
+  .discount-text{
+    border-bottom:  2px dotted  #d16301;
+    margin-bottom: 2px;
+  }
+  .sticker-elem{
+    position: absolute;
+    top: -11px;
+    left: -1px;
+    height: 11px;
+    width: 100px;
+    background-image: url(../images/discount.svg);
+    background-repeat: no-repeat;
+  }
+}
+@media (max-width: 800px){
+.right-panel {
+  min-width: 280px;
+  width: 280px;
+}}

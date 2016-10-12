@@ -2,6 +2,7 @@
  * Created by chaika on 02.02.16.
  */
 var Templates = require('../Templates');
+var Storage = require('./Storage')
 
 //Перелік розмірів піци
 var PizzaSize = {
@@ -11,7 +12,10 @@ var PizzaSize = {
 
 //Змінна в якій зберігаються перелік піц в кошику
 var Cart = [];
-
+var savedCart = Storage.get('cart');
+if(savedCart){
+    Cart = savedCart;
+}
 //HTML едемент куди будуть додаватися піци
 var $cart = $("#cart");
 
@@ -32,8 +36,16 @@ function addToCart(pizza, size) {
 function removeFromCart(cart_item) {
     //Видалити піцу з кошика
     //TODO: треба зробити
-
+    var item_index = Cart.indexOf(cart_item);
+    if(item_index > -1)
+    {
+        Cart.splice(item_index, 1);
+    }
     //Після видалення оновити відображення
+    updateCart();
+}
+function emptyCart() {
+    Cart = [];
     updateCart();
 }
 
@@ -41,7 +53,7 @@ function initialiseCart() {
     //Фукнція віпрацьвуватиме при завантаженні сторінки
     //Тут можна наприклад, зчитати вміст корзини який збережено в Local Storage то показати його
     //TODO: ...
-
+    $(".empty-cart").click(emptyCart);
     updateCart();
 }
 
@@ -53,7 +65,7 @@ function getPizzaInCart() {
 function updateCart() {
     //Функція викликається при зміні вмісту кошика
     //Тут можна наприклад показати оновлений кошик на екрані та зберегти вміт кошика в Local Storage
-
+    Storage.set('cart',Cart);
     //Очищаємо старі піци в кошику
     $cart.html("");
 
@@ -69,6 +81,21 @@ function updateCart() {
 
             //Оновлюємо відображення
             updateCart();
+        });
+        $node.find(".minus").click(function(){
+            //Збільшуємо кількість замовлених піц
+            cart_item.quantity -= 1;
+            if(cart_item.quantity == 0){
+                removeFromCart(cart_item);
+            }
+            else
+                {
+                updateCart();
+                }
+        });
+        $node.find(".remove-from-cart").click(function(){
+            //Збільшуємо кількість замовлених піц
+            removeFromCart(cart_item);
         });
 
         $cart.append($node);
