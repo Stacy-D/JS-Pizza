@@ -17,7 +17,7 @@
   top: 0;
   bottom: 0;
   right: 0;
-  height: 75%;
+  height: 100%;
   background-color: #fff;
   padding-top: @padding-top*0.2;
   padding-right: 0;
@@ -52,6 +52,7 @@
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 30px;
+    height: 70px;
     .cart-title{
       font-weight: bold;
       font-size: 19px;
@@ -65,12 +66,16 @@
       float: right;
       font-size: 10px;
       color: gray;
+      cursor: pointer;
+    }
+    .hide{
+      display: none;
     }
   }
   .cart-items{
     background-color: #F5F5F5;
     width: 100%;
-    height: 100%;
+    height: 80%;
     .no-items-cart{
       padding: 20%;
       text-align: center;
@@ -78,33 +83,62 @@
   }
 }
 .left-panel{
-  padding-top: @padding-top;
+  padding-top: 90px;
   .page-title{
     text-align: center;
     .counter-color{
       background-color: orange;
     }
   }
+  .all-pizza-type-wrap{
+    text-align: center;
+    .nav-pills a{
+      color: #d16301;
+    }
+    .active a, .active a:hover{
+      color: #fff;
+      background: orange;
+    }
+    .all-pizza-type{
+      display: inline-block;
+      margin-bottom: 30px;
+
+  }}
 }
 
 .top-panel{
   background: rgba(0,0,0,.8);
-  height: @padding-top*0.4;
+  height: 90px;
   z-index: 5;
   .navbar-top-row{
     border-bottom: 1px solid gray;
     color:gray;
+    height: 45px;
     margin-left: 110px ;
-    .main-header-top-item{
-      .phone-number{
-        font-size: 30px;
+    .phone-number{
+        font-size: 25px;
+        padding-right: 30px;
       }
+    .work-days{
+      font-size: 13px;
     }
-  }
+    .delivery{
+      font-size: 16px;
+      margin-left: 30px;
+    }
+
   .btn-sign-up{
     margin-top: 5px;
     margin-bottom: 5px;
     float: right;
+  }}
+  .navbar-down-row{
+    height: 45px;
+    padding-top: 5px;
+    .pizza-page{
+      font-size: 20px;
+      margin-left: 110px;
+    }
   }
   .navbar-site-icon{
     border-right: 1px solid #d16301;

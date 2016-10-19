@@ -184,11 +184,11 @@ module.exports = pizza_info;
 var ejs = require('ejs');
 
 
-exports.PizzaMenu_OneItem = ejs.compile("<%\n\nfunction getIngredientsArray(pizza) {\n    //Отримує вміст піци\n    var content = pizza.content;\n    var result = [];\n\n    //Object.keys повертає масив ключів в об’єкті JavaScript\n\n    Object.keys(content).forEach(function(key){\n\n        //a.concat(b) створює спільний масив із масивів a та b\n        result = result.concat(content[key]);\n    });\n\n    return result;\n}\n\n   %>\n<div class=\"col-md-6 col-lg-4 pizza-card\">\n    <div class=\"thumbnail\">\n        <img class=\"pizza-icon\" src=\"<%= pizza.icon %>\" alt=\"Pizza\">\n\n        <% if(pizza.is_new) { %>\n        <span class=\"label label-danger\">Нова</span>\n        <% } else if(pizza.is_popular) {%>\n        <span class=\"label label-success\">Популярна</span>\n        <% } %>\n\n        <div class=\"caption\">\n            <span class=\"title\"><%= pizza.title %></span>\n            <div class=\"type\"><%= pizza.type %></div>\n            <div class=\"description\">\n                <%= getIngredientsArray(pizza).join(\", \") %>\n            </div>\n        </div>\n\n        <!-- Перед тим щоб показати кнопку необхідно переконатися, що піца має великий розмір -->\n        <button class=\"btn btn-primary buy-big\">Купити велику</button>\n    </div>\n</div>");
+exports.PizzaMenu_OneItem = ejs.compile("<%\nfunction getIngredientsArray(pizza) {\n    //Отримує вміст піци\n    var content = pizza.content;\n    var result = [];\n\n    //Object.keys повертає масив ключів в об’єкті JavaScript\n\n    Object.keys(content).forEach(function (key) {\n\n        //a.concat(b) створює спільний масив із масивів a та b\n        result = result.concat(content[key]);\n    });\n\n    return result;\n}\n%>\n<div class=\"col-md-6 col-lg-4 pizza-item\">\n    <div class=\"pizza-label\">\n        <% if(pizza.is_new) { %>\n        <span class=\"label label-danger\">Нова</span>\n        <% } else if(pizza.is_popular) { %>\n        <span class=\"label label-success\">Популярна</span>\n        <% } %>\n    </div>\n    <div class=\"thumbnail\">\n        <img class=\"pizza-icon\" src=\"<%= pizza.icon %>\" alt=\"Pizza image\">\n        <div class=\"caption\">\n            <span class=\"title\"><%= pizza.title %></span>\n            <div class=\"type\"><%= pizza.type %></div>\n            <div class=\"description\">\n                <%= getIngredientsArray(pizza).join(\", \") %>\n            </div>\n            <div class=\"row\">\n                <% if(pizza.small_size) { %>\n                <% if(pizza.big_size){ %>\n                <div class=\"col-sm-6 pizza-small\">\n                    <% } else{ %>\n                    <div class=\"col-sm-12 pizza-small\">\n                        <% } %>\n                        <div>\n                            <img class=\"ui right spaced avatar image\" src=\"assets/images/size-icon.svg\">\n                            <span class=\"diagonal\">30</span>\n                        </div>\n                        <div>\n                            <img class=\"ui right spaced avatar image\" src=\"assets/images/weight.svg\">\n                            <span class=\"gram\"><%= pizza.small_size.weight %></span>\n                        </div>\n                        <h2>\n                            <div class=\"price\"><%= pizza.small_size.price %>\n                                <div class=\"currency\"> грн.</div>\n                            </div>\n                        </h2>\n                        <a href=\"#\" class=\"btn btn-warning buy-button-small\" role=\"button\">Купити</a>\n                    </div>\n                    <% } %>\n                    <% if(pizza.big_size) { %>\n                    <% if(pizza.small_size){ %>\n                    <div class=\"col-sm-6 pizza-small\">\n                        <% } else{ %>\n                        <div class=\"col-sm-12 pizza-small\">\n                            <% } %>\n                            <div>\n                                <img class=\"ui right spaced avatar image\" src=\"assets/images/size-icon.svg\">\n                                <span class=\"diagonal\">40</span>\n                            </div>\n                            <div>\n                                <img class=\"ui right spaced avatar image\" src=\"assets/images/weight.svg\">\n                                <span class=\"gram\"><%= pizza.big_size.price %></span>\n                            </div>\n                            <h2>\n                                <div class=\"price\"><%= pizza.big_size.price %>\n                                    <div style=\"font-size:14px;\"> грн.</div>\n                                </div>\n                            </h2>\n                            <a href=\"#\" class=\"btn btn-warning  buy-button-big\" role=\"button\">Купити </a>\n                        </div>\n                        <% } %>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>");
 
-exports.PizzaCart_OneItem = ejs.compile("<div>\n    <%= pizza.title %> (<%= size %>)\n    <div>Ціна: <%= pizza[size].price %> грн.</div>\n    <div>\n        <button class=\"btn btn-danger minus\">-</button>\n        <span class=\"label label-default\"><%= quantity %></span>\n        <button class=\"btn btn-success plus\">+</button>\n    </div>\n</div>");
+exports.PizzaCart_OneItem = ejs.compile("<div class=\"pizza-card\">\n    <div class=\"cart-title\"><%= pizza.title %></div>\n    <div class=\"order-options\">\n        <img class=\"diagonal-image\" src=\"assets/images/size-icon.svg\"><span class=\"diagonal\">\n            <%= diagonal%>\n        </span>\n        <img class=\"gram-image\" src=\"assets/images/weight.svg\">\n        <span class=\"gram\"><%= weight%></span>\n        <div class=\"info-options\">\n            <span class=\"sum-amount\"> <%= price %>грн</span>\n            <button class=\"btn btn-danger btn-minus\">-</button>\n            <span class=\"pizza-quantity\">\n                <%= quantity%>\n            </span>\n            <button class=\"btn btn-success btn-plus\">+</button>\n            <button class=\"btn btn-default remove-from-cart\"> Х</button>\n        </div>\n    </div>\n    <img class=\"img-cart pizza-image \" alt=\"Піца\" src=\"<%= pizza.icon%>\">\n</div>");
 
-},{"ejs":6}],3:[function(require,module,exports){
+},{"ejs":8}],3:[function(require,module,exports){
 /**
  * Created by chaika on 25.01.16.
  */
@@ -209,6 +209,7 @@ $(function(){
  * Created by chaika on 02.02.16.
  */
 var Templates = require('../Templates');
+var Storage = require('./Storage')
 
 //Перелік розмірів піци
 var PizzaSize = {
@@ -218,19 +219,42 @@ var PizzaSize = {
 
 //Змінна в якій зберігаються перелік піц в кошику
 var Cart = [];
-
+var $sumToPay = $(".order-sum-amount");
+var $noItems = $(".holder")
+var savedCart = Storage.get('cart');
+if(savedCart){
+    Cart = savedCart;
+}
 //HTML едемент куди будуть додаватися піци
-var $cart = $("#cart");
+var $cart = $(".cart-items");
 
 function addToCart(pizza, size) {
-    //Додавання однієї піци в кошик покупок
-
-    //Приклад реалізації, можна робити будь-яким іншим способом
-    Cart.push({
-        pizza: pizza,
-        size: size,
-        quantity: 1
+    if(size == PizzaSize.Big ){
+        var diagonal = 40;
+        var weight = pizza.big_size.weight;
+        var price = pizza.big_size.price;
+    }
+    else if(size == PizzaSize.Small){
+        var diagonal = 30;
+        var weight = pizza.small_size.weight;
+        var price = pizza.small_size.price;
+    }
+    var in_cart = false;
+    Cart.forEach(function (item) {
+        if(item.pizza.title == pizza.title & item.diagonal == diagonal){
+            item.quantity+=1;
+            in_cart = true;
+            return;
+        }
     });
+    if(!in_cart){
+        Cart.push({
+            pizza: pizza,
+            diagonal: diagonal,
+            weight: weight,
+            price: price,
+            quantity: 1
+    });}
 
     //Оновити вміст кошика на сторінці
     updateCart();
@@ -239,8 +263,16 @@ function addToCart(pizza, size) {
 function removeFromCart(cart_item) {
     //Видалити піцу з кошика
     //TODO: треба зробити
-
+    var item_index = Cart.indexOf(cart_item);
+    if(item_index > -1)
+    {
+        Cart.splice(item_index, 1);
+    }
     //Після видалення оновити відображення
+    updateCart();
+}
+function emptyCart() {
+    Cart = [];
     updateCart();
 }
 
@@ -248,7 +280,7 @@ function initialiseCart() {
     //Фукнція віпрацьвуватиме при завантаженні сторінки
     //Тут можна наприклад, зчитати вміст корзини який збережено в Local Storage то показати його
     //TODO: ...
-
+    $(".empty-cart").click(emptyCart);
     updateCart();
 }
 
@@ -260,29 +292,48 @@ function getPizzaInCart() {
 function updateCart() {
     //Функція викликається при зміні вмісту кошика
     //Тут можна наприклад показати оновлений кошик на екрані та зберегти вміт кошика в Local Storage
-
+    Storage.set('cart',Cart);
     //Очищаємо старі піци в кошику
     $cart.html("");
-
+    var sum = 0;
     //Онволення однієї піци
     function showOnePizzaInCart(cart_item) {
+        sum += cart_item.price * cart_item.quantity;
         var html_code = Templates.PizzaCart_OneItem(cart_item);
 
         var $node = $(html_code);
 
-        $node.find(".plus").click(function(){
+        $node.find(".btn-plus").click(function(){
             //Збільшуємо кількість замовлених піц
             cart_item.quantity += 1;
 
             //Оновлюємо відображення
             updateCart();
         });
+        $node.find(".btn-minus").click(function(){
+            //Збільшуємо кількість замовлених піц
+            cart_item.quantity -= 1;
+            if(cart_item.quantity == 0){
+                removeFromCart(cart_item);
+            }
+            else
+                {
+                updateCart();
+                }
+        });
+        $node.find(".remove-from-cart").click(function(){
+            //Збільшуємо кількість замовлених піц
+            removeFromCart(cart_item);
+        });
 
         $cart.append($node);
     }
 
+    if(Cart.length == 0){
+        $cart.append($noItems.html());
+    }
     Cart.forEach(showOnePizzaInCart);
-
+    $sumToPay.html(sum+" грн");
 }
 
 exports.removeFromCart = removeFromCart;
@@ -292,7 +343,7 @@ exports.getPizzaInCart = getPizzaInCart;
 exports.initialiseCart = initialiseCart;
 
 exports.PizzaSize = PizzaSize;
-},{"../Templates":2}],5:[function(require,module,exports){
+},{"../Templates":2,"./Storage":6}],5:[function(require,module,exports){
 /**
  * Created by chaika on 02.02.16.
  */
@@ -301,8 +352,13 @@ var PizzaCart = require('./PizzaCart');
 var Pizza_List = require('../Pizza_List');
 
 //HTML едемент куди будуть додаватися піци
-var $pizza_list = $("#pizza_list");
-
+var $pizza_list = $(".list-pizza");
+var filter={
+    meat: 0,
+    pineapple:1,
+    mushrooms:2,
+    ocean:3
+}
 function showPizzaList(list) {
     //Очищаємо старі піци в кошику
     $pizza_list.html("");
@@ -313,10 +369,10 @@ function showPizzaList(list) {
 
         var $node = $(html_code);
 
-        $node.find(".buy-big").click(function(){
+        $node.find(".buy-button-big").click(function(){
             PizzaCart.addToCart(pizza, PizzaCart.PizzaSize.Big);
         });
-        $node.find(".buy-small").click(function(){
+        $node.find(".buy-button-small").click(function(){
             PizzaCart.addToCart(pizza, PizzaCart.PizzaSize.Small);
         });
 
@@ -324,6 +380,7 @@ function showPizzaList(list) {
     }
 
     list.forEach(showOnePizza);
+    $(".pizza-counter").text(list.length);
 }
 
 function filterPizza(filter) {
@@ -331,10 +388,22 @@ function filterPizza(filter) {
     var pizza_shown = [];
 
     Pizza_List.forEach(function(pizza){
-        //Якщо піка відповідає фільтру
-        //pizza_shown.push(pizza);
-
-        //TODO: зробити фільтри
+        if(filter == 0){
+        if(pizza.content.meat || pizza.content.chicken) {
+            pizza_shown.push(pizza);
+        }}
+        else if(filter == 2){
+            if(pizza.content.mushroom) {
+                pizza_shown.push(pizza);
+            }}
+        else if(filter == 3){
+            if(pizza.content.ocean) {
+                pizza_shown.push(pizza);
+            }}
+        else if(filter == 1){
+            if(pizza.content.pineapple) {
+                pizza_shown.push(pizza);
+            }}
     });
 
     //Показати відфільтровані піци
@@ -343,12 +412,440 @@ function filterPizza(filter) {
 
 function initialiseMenu() {
     //Показуємо усі піци
-    showPizzaList(Pizza_List)
+    showPizzaList(Pizza_List);
+    addFilters();
+
+
+}
+function addFilters() {
+    function filterbuttonClick(button,filter) {
+        $(".pizza-filter-button").removeClass("active");
+        $(button).addClass("active");
+        $(".title-text").text("Піци "+$(button).text().toLowerCase());
+        filterPizza(filter);
+    }
+    $("#filter-button-meat").click(function (e) {
+        filterbuttonClick("#filter-button-meat",filter.meat);
+    });
+    $("#filter-button-pineapples").click(function (e) {
+        filterbuttonClick("#filter-button-pineapples",filter.pineapple);
+
+    });
+    $("#filter-button-mushrooms").click(function (e) {
+        filterbuttonClick("#filter-button-mushrooms",filter.mushrooms);
+
+    });
+    $("#filter-button-seafood").click(function (e) {
+        filterbuttonClick("#filter-button-seafood",filter.ocean);
+    });
+    $("#filter-button-all-pizza").click(function (e) {
+        $(".pizza-filter-button").removeClass("active");
+        $("#filter-button-all-pizza").addClass("active");
+        $(".title-text").text("Усі піци");
+        showPizzaList(Pizza_List);
+    });
 }
 
 exports.filterPizza = filterPizza;
 exports.initialiseMenu = initialiseMenu;
 },{"../Pizza_List":1,"../Templates":2,"./PizzaCart":4}],6:[function(require,module,exports){
+/**
+ * Created by Stacy on 10/10/16.
+ */
+var basil = require('basil.js'); basil = new basil();
+exports.get = function(key) {
+    return basil.get(key); };
+exports.set = function(key, value) {
+    return basil.set(key, value); };
+},{"basil.js":7}],7:[function(require,module,exports){
+(function () {
+	// Basil
+	var Basil = function (options) {
+		return Basil.utils.extend({}, Basil.plugins, new Basil.Storage().init(options));
+	};
+
+	// Version
+	Basil.version = '0.4.4';
+
+	// Utils
+	Basil.utils = {
+		extend: function () {
+			var destination = typeof arguments[0] === 'object' ? arguments[0] : {};
+			for (var i = 1; i < arguments.length; i++) {
+				if (arguments[i] && typeof arguments[i] === 'object')
+					for (var property in arguments[i])
+						destination[property] = arguments[i][property];
+			}
+			return destination;
+		},
+		each: function (obj, fnIterator, context) {
+			if (this.isArray(obj)) {
+				for (var i = 0; i < obj.length; i++)
+					if (fnIterator.call(context, obj[i], i) === false) return;
+			} else if (obj) {
+				for (var key in obj)
+					if (fnIterator.call(context, obj[key], key) === false) return;
+			}
+		},
+		tryEach: function (obj, fnIterator, fnError, context) {
+			this.each(obj, function (value, key) {
+				try {
+					return fnIterator.call(context, value, key);
+				} catch (error) {
+					if (this.isFunction(fnError)) {
+						try {
+							fnError.call(context, value, key, error);
+						} catch (error) {}
+					}
+				}
+			}, this);
+		},
+		registerPlugin: function (methods) {
+			Basil.plugins = this.extend(methods, Basil.plugins);
+		},
+		getTypeOf: function (obj) {
+			if (typeof obj === 'undefined' || obj === null)
+				return '' + obj;
+			return Object.prototype.toString.call(obj).replace(/^\[object\s(.*)\]$/, function ($0, $1) { return $1.toLowerCase(); });
+		}
+	};
+  	// Add some isType methods: isArguments, isBoolean, isFunction, isString, isArray, isNumber, isDate, isRegExp, isUndefined, isNull.
+	var types = ['Arguments', 'Boolean', 'Function', 'String', 'Array', 'Number', 'Date', 'RegExp', 'Undefined', 'Null'];
+	for (var i = 0; i < types.length; i++) {
+		Basil.utils['is' + types[i]] = (function (type) {
+			return function (obj) {
+				return Basil.utils.getTypeOf(obj) === type.toLowerCase();
+			};
+		})(types[i]);
+	}
+
+	// Plugins
+	Basil.plugins = {};
+
+	// Options
+	Basil.options = Basil.utils.extend({
+		namespace: 'b45i1',
+		storages: ['local', 'cookie', 'session', 'memory'],
+		expireDays: 365
+	}, window.Basil ? window.Basil.options : {});
+
+	// Storage
+	Basil.Storage = function () {
+		var _salt = 'b45i1' + (Math.random() + 1)
+				.toString(36)
+				.substring(7),
+			_storages = {},
+			_isValidKey = function (key) {
+				var type = Basil.utils.getTypeOf(key);
+				return (type === 'string' && key) || type === 'number' || type === 'boolean';
+			},
+			_toStoragesArray = function (storages) {
+				if (Basil.utils.isArray(storages))
+					return storages;
+				return Basil.utils.isString(storages) ? [storages] : [];
+			},
+			_toStoredKey = function (namespace, path) {
+				var key = '';
+				if (_isValidKey(path)) {
+					key += path;
+				} else if (Basil.utils.isArray(path)) {
+					path = Basil.utils.isFunction(path.filter) ? path.filter(_isValidKey) : path;
+					key = path.join('.');
+				}
+				return key && _isValidKey(namespace) ? namespace + '.' + key : key;
+ 			},
+			_toKeyName = function (namespace, key) {
+				if (!_isValidKey(namespace))
+					return key;
+				return key.replace(new RegExp('^' + namespace + '.'), '');
+			},
+			_toStoredValue = function (value) {
+				return JSON.stringify(value);
+			},
+			_fromStoredValue = function (value) {
+				return value ? JSON.parse(value) : null;
+			};
+
+		// HTML5 web storage interface
+		var webStorageInterface = {
+			engine: null,
+			check: function () {
+				try {
+					window[this.engine].setItem(_salt, true);
+					window[this.engine].removeItem(_salt);
+				} catch (e) {
+					return false;
+				}
+				return true;
+			},
+			set: function (key, value, options) {
+				if (!key)
+					throw Error('invalid key');
+				window[this.engine].setItem(key, value);
+			},
+			get: function (key) {
+				return window[this.engine].getItem(key);
+			},
+			remove: function (key) {
+				window[this.engine].removeItem(key);
+			},
+			reset: function (namespace) {
+				for (var i = 0, key; i < window[this.engine].length; i++) {
+					key = window[this.engine].key(i);
+					if (!namespace || key.indexOf(namespace) === 0) {
+						this.remove(key);
+						i--;
+					}
+				}
+			},
+			keys: function (namespace) {
+				var keys = [];
+				for (var i = 0, key; i < window[this.engine].length; i++) {
+					key = window[this.engine].key(i);
+					if (!namespace || key.indexOf(namespace) === 0)
+						keys.push(_toKeyName(namespace, key));
+				}
+				return keys;
+			}
+		};
+
+		// local storage
+		_storages.local = Basil.utils.extend({}, webStorageInterface, {
+			engine: 'localStorage'
+		});
+		// session storage
+		_storages.session = Basil.utils.extend({}, webStorageInterface, {
+			engine: 'sessionStorage'
+		});
+
+		// memory storage
+		_storages.memory = {
+			_hash: {},
+			check: function () {
+				return true;
+			},
+			set: function (key, value, options) {
+				if (!key)
+					throw Error('invalid key');
+				this._hash[key] = value;
+			},
+			get: function (key) {
+				return this._hash[key] || null;
+			},
+			remove: function (key) {
+				delete this._hash[key];
+			},
+			reset: function (namespace) {
+				for (var key in this._hash) {
+					if (!namespace || key.indexOf(namespace) === 0)
+						this.remove(key);
+				}
+			},
+			keys: function (namespace) {
+				var keys = [];
+				for (var key in this._hash)
+					if (!namespace || key.indexOf(namespace) === 0)
+						keys.push(_toKeyName(namespace, key));
+				return keys;
+			}
+		};
+
+		// cookie storage
+		_storages.cookie = {
+			check: function () {
+				if (!navigator.cookieEnabled)
+					return false;
+				if (window.self !== window.top) {
+					// we need to check third-party cookies;
+					var cookie = 'thirdparty.check=' + Math.round(Math.random() * 1000);
+					document.cookie = cookie + '; path=/';
+					return document.cookie.indexOf(cookie) !== -1;
+				}
+				return true;
+			},
+			set: function (key, value, options) {
+				if (!this.check())
+					throw Error('cookies are disabled');
+				options = options || {};
+				if (!key)
+					throw Error('invalid key');
+				var cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+				// handle expiration days
+				if (options.expireDays) {
+					var date = new Date();
+					date.setTime(date.getTime() + (options.expireDays * 24 * 60 * 60 * 1000));
+					cookie += '; expires=' + date.toGMTString();
+				}
+				// handle domain
+				if (options.domain && options.domain !== document.domain) {
+					var _domain = options.domain.replace(/^\./, '');
+					if (document.domain.indexOf(_domain) === -1 || _domain.split('.').length <= 1)
+						throw Error('invalid domain');
+					cookie += '; domain=' + options.domain;
+				}
+				// handle secure
+				if (options.secure === true) {
+					cookie += '; secure';
+				}
+				document.cookie = cookie + '; path=/';
+			},
+			get: function (key) {
+				if (!this.check())
+					throw Error('cookies are disabled');
+				var encodedKey = encodeURIComponent(key);
+				var cookies = document.cookie ? document.cookie.split(';') : [];
+				// retrieve last updated cookie first
+				for (var i = cookies.length - 1, cookie; i >= 0; i--) {
+					cookie = cookies[i].replace(/^\s*/, '');
+					if (cookie.indexOf(encodedKey + '=') === 0)
+						return decodeURIComponent(cookie.substring(encodedKey.length + 1, cookie.length));
+				}
+				return null;
+			},
+			remove: function (key) {
+				// remove cookie from main domain
+				this.set(key, '', { expireDays: -1 });
+				// remove cookie from upper domains
+				var domainParts = document.domain.split('.');
+				for (var i = domainParts.length; i >= 0; i--) {
+					this.set(key, '', { expireDays: -1, domain: '.' + domainParts.slice(- i).join('.') });
+				}
+			},
+			reset: function (namespace) {
+				var cookies = document.cookie ? document.cookie.split(';') : [];
+				for (var i = 0, cookie, key; i < cookies.length; i++) {
+					cookie = cookies[i].replace(/^\s*/, '');
+					key = cookie.substr(0, cookie.indexOf('='));
+					if (!namespace || key.indexOf(namespace) === 0)
+						this.remove(key);
+				}
+			},
+			keys: function (namespace) {
+				if (!this.check())
+					throw Error('cookies are disabled');
+				var keys = [],
+					cookies = document.cookie ? document.cookie.split(';') : [];
+				for (var i = 0, cookie, key; i < cookies.length; i++) {
+					cookie = cookies[i].replace(/^\s*/, '');
+					key = decodeURIComponent(cookie.substr(0, cookie.indexOf('=')));
+					if (!namespace || key.indexOf(namespace) === 0)
+						keys.push(_toKeyName(namespace, key));
+				}
+				return keys;
+			}
+		};
+
+		return {
+			init: function (options) {
+				this.setOptions(options);
+				return this;
+			},
+			setOptions: function (options) {
+				this.options = Basil.utils.extend({}, this.options || Basil.options, options);
+			},
+			support: function (storage) {
+				return _storages.hasOwnProperty(storage);
+			},
+			check: function (storage) {
+				if (this.support(storage))
+					return _storages[storage].check();
+				return false;
+			},
+			set: function (key, value, options) {
+				options = Basil.utils.extend({}, this.options, options);
+				if (!(key = _toStoredKey(options.namespace, key)))
+					return false;
+				value = options.raw === true ? value : _toStoredValue(value);
+				var where = null;
+				// try to set key/value in first available storage
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage, index) {
+					_storages[storage].set(key, value, options);
+					where = storage;
+					return false; // break;
+				}, null, this);
+				if (!where) {
+					// key has not been set anywhere
+					return false;
+				}
+				// remove key from all other storages
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage, index) {
+					if (storage !== where)
+						_storages[storage].remove(key);
+				}, null, this);
+				return true;
+			},
+			get: function (key, options) {
+				options = Basil.utils.extend({}, this.options, options);
+				if (!(key = _toStoredKey(options.namespace, key)))
+					return null;
+				var value = null;
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage, index) {
+					if (value !== null)
+						return false; // break if a value has already been found.
+					value = _storages[storage].get(key, options) || null;
+					value = options.raw === true ? value : _fromStoredValue(value);
+				}, function (storage, index, error) {
+					value = null;
+				}, this);
+				return value;
+			},
+			remove: function (key, options) {
+				options = Basil.utils.extend({}, this.options, options);
+				if (!(key = _toStoredKey(options.namespace, key)))
+					return;
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage) {
+					_storages[storage].remove(key);
+				}, null, this);
+			},
+			reset: function (options) {
+				options = Basil.utils.extend({}, this.options, options);
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage) {
+					_storages[storage].reset(options.namespace);
+				}, null, this);
+			},
+			keys: function (options) {
+				options = options || {};
+				var keys = [];
+				for (var key in this.keysMap(options))
+					keys.push(key);
+				return keys;
+			},
+			keysMap: function (options) {
+				options = Basil.utils.extend({}, this.options, options);
+				var map = {};
+				Basil.utils.tryEach(_toStoragesArray(options.storages), function (storage) {
+					Basil.utils.each(_storages[storage].keys(options.namespace), function (key) {
+						map[key] = Basil.utils.isArray(map[key]) ? map[key] : [];
+						map[key].push(storage);
+					}, this);
+				}, null, this);
+				return map;
+			}
+		};
+	};
+
+	// Access to native storages, without namespace or basil value decoration
+	Basil.memory = new Basil.Storage().init({ storages: 'memory', namespace: null, raw: true });
+	Basil.cookie = new Basil.Storage().init({ storages: 'cookie', namespace: null, raw: true });
+	Basil.localStorage = new Basil.Storage().init({ storages: 'local', namespace: null, raw: true });
+	Basil.sessionStorage = new Basil.Storage().init({ storages: 'session', namespace: null, raw: true });
+
+	// browser export
+	window.Basil = Basil;
+
+	// AMD export
+	if (typeof define === 'function' && define.amd) {
+		define(function() {
+			return Basil;
+		});
+	// commonjs export
+	} else if (typeof module !== 'undefined' && module.exports) {
+		module.exports = Basil;
+	}
+
+})();
+
+},{}],8:[function(require,module,exports){
 /*
  * EJS Embedded JavaScript templates
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
@@ -395,19 +892,20 @@ exports.initialiseMenu = initialiseMenu;
  * @public
  */
 
-var fs = require('fs')
-  , utils = require('./utils')
-  , scopeOptionWarned = false
-  , _VERSION_STRING = require('../package.json').version
-  , _DEFAULT_DELIMITER = '%'
-  , _DEFAULT_LOCALS_NAME = 'locals'
-  , _REGEX_STRING = '(<%%|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)'
-  , _OPTS = [ 'cache', 'filename', 'delimiter', 'scope', 'context'
-            , 'debug', 'compileDebug', 'client', '_with', 'rmWhitespace'
-            , 'strict', 'localsName'
-            ]
-  , _TRAILING_SEMCOL = /;\s*$/
-  , _BOM = /^\uFEFF/;
+var fs = require('fs');
+var path = require('path');
+var utils = require('./utils');
+
+var scopeOptionWarned = false;
+var _VERSION_STRING = require('../package.json').version;
+var _DEFAULT_DELIMITER = '%';
+var _DEFAULT_LOCALS_NAME = 'locals';
+var _REGEX_STRING = '(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)';
+var _OPTS = [ 'cache', 'filename', 'delimiter', 'scope', 'context',
+        'debug', 'compileDebug', 'client', '_with', 'root', 'rmWhitespace',
+        'strict', 'localsName'];
+var _TRAILING_SEMCOL = /;\s*$/;
+var _BOM = /^\uFEFF/;
 
 /**
  * EJS template function cache. This can be a LRU object from lru-cache NPM
@@ -435,23 +933,43 @@ exports.localsName = _DEFAULT_LOCALS_NAME;
  * Get the path to the included file from the parent file path and the
  * specified path.
  *
- * @param {String} name     specified path
- * @param {String} filename parent file path
+ * @param {String}  name     specified path
+ * @param {String}  filename parent file path
+ * @param {Boolean} isDir    parent file path whether is directory
  * @return {String}
  */
-
-exports.resolveInclude = function(name, filename) {
-  var path = require('path')
-    , dirname = path.dirname
-    , extname = path.extname
-    , resolve = path.resolve
-    , includePath = resolve(dirname(filename), name)
-    , ext = extname(name);
+exports.resolveInclude = function(name, filename, isDir) {
+  var dirname = path.dirname;
+  var extname = path.extname;
+  var resolve = path.resolve;
+  var includePath = resolve(isDir ? filename : dirname(filename), name);
+  var ext = extname(name);
   if (!ext) {
     includePath += '.ejs';
   }
   return includePath;
 };
+
+/**
+ * Get the path to the included file by Options
+ * 
+ * @param  {String}  path    specified path
+ * @param  {Options} options compilation options
+ * @return {String}
+ */
+function getIncludePath(path, options){
+  var includePath;
+  if (path.charAt(0) == '/') {
+    includePath = exports.resolveInclude(path.replace(/^\/*/,''), options.root || '/', true);
+  }
+  else {
+    if (!options.filename) {
+      throw new Error('`include` use relative path requires the \'filename\' option.');
+    }
+    includePath = exports.resolveInclude(path, options.filename);  
+  }
+  return includePath;
+}
 
 /**
  * Get the template from a string or a file, either compiled on-the-fly or
@@ -472,35 +990,35 @@ exports.resolveInclude = function(name, filename) {
  */
 
 function handleCache(options, template) {
-  var fn
-    , path = options.filename
-    , hasTemplate = arguments.length > 1;
+  var func;
+  var filename = options.filename;
+  var hasTemplate = arguments.length > 1;
 
   if (options.cache) {
-    if (!path) {
+    if (!filename) {
       throw new Error('cache option requires a filename');
     }
-    fn = exports.cache.get(path);
-    if (fn) {
-      return fn;
+    func = exports.cache.get(filename);
+    if (func) {
+      return func;
     }
     if (!hasTemplate) {
-      template = fs.readFileSync(path).toString().replace(_BOM, '');
+      template = fs.readFileSync(filename).toString().replace(_BOM, '');
     }
   }
   else if (!hasTemplate) {
     // istanbul ignore if: should not happen at all
-    if (!path) {
+    if (!filename) {
       throw new Error('Internal EJS error: no file name or template '
                     + 'provided');
     }
-    template = fs.readFileSync(path).toString().replace(_BOM, '');
+    template = fs.readFileSync(filename).toString().replace(_BOM, '');
   }
-  fn = exports.compile(template, options);
+  func = exports.compile(template, options);
   if (options.cache) {
-    exports.cache.set(path, fn);
+    exports.cache.set(filename, func);
   }
-  return fn;
+  return func;
 }
 
 /**
@@ -518,10 +1036,7 @@ function handleCache(options, template) {
 
 function includeFile(path, options) {
   var opts = utils.shallowCopy({}, options);
-  if (!opts.filename) {
-    throw new Error('`include` requires the \'filename\' option.');
-  }
-  opts.filename = exports.resolveInclude(path, opts.filename);
+  opts.filename = getIncludePath(path, opts);
   return handleCache(opts);
 }
 
@@ -531,24 +1046,24 @@ function includeFile(path, options) {
  * @memberof module:ejs-internal
  * @param {String}  path    path for the specified file
  * @param {Options} options compilation options
- * @return {String}
+ * @return {Object}
  * @static
  */
 
 function includeSource(path, options) {
-  var opts = utils.shallowCopy({}, options)
-    , includePath
-    , template;
-  if (!opts.filename) {
-    throw new Error('`include` requires the \'filename\' option.');
-  }
-  includePath = exports.resolveInclude(path, opts.filename);
+  var opts = utils.shallowCopy({}, options);
+  var includePath;
+  var template;
+  includePath = getIncludePath(path,opts);
   template = fs.readFileSync(includePath).toString().replace(_BOM, '');
-
   opts.filename = includePath;
   var templ = new Template(template, opts);
   templ.generateSource();
-  return templ.source;
+  return {
+    source: templ.source,
+    filename: includePath,
+    template: template
+  };
 }
 
 /**
@@ -565,10 +1080,9 @@ function includeSource(path, options) {
  */
 
 function rethrow(err, str, filename, lineno){
-  var lines = str.split('\n')
-    , start = Math.max(lineno - 3, 0)
-    , end = Math.min(lines.length, lineno + 3);
-
+  var lines = str.split('\n');
+  var start = Math.max(lineno - 3, 0);
+  var end = Math.min(lines.length, lineno + 3);
   // Error context
   var context = lines.slice(start, end).map(function (line, i){
     var curr = i + start + 1;
@@ -653,10 +1167,9 @@ exports.compile = function compile(template, opts) {
  * @public
  */
 
-exports.render = function (template, data, opts) {
-  data = data || {};
-  opts = opts || {};
-  var fn;
+exports.render = function (template, d, o) {
+  var data = d || {};
+  var opts = o || {};
 
   // No options object -- if there are optiony names
   // in the data, copy them to options
@@ -681,12 +1194,12 @@ exports.render = function (template, data, opts) {
  */
 
 exports.renderFile = function () {
-  var args = Array.prototype.slice.call(arguments)
-    , path = args.shift()
-    , cb = args.pop()
-    , data = args.shift() || {}
-    , opts = args.pop() || {}
-    , result;
+  var args = Array.prototype.slice.call(arguments);
+  var filename = args.shift();
+  var cb = args.pop();
+  var data = args.shift() || {};
+  var opts = args.pop() || {};
+  var result;
 
   // Don't pollute passed in opts obj with new vals
   opts = utils.shallowCopy({}, opts);
@@ -703,7 +1216,7 @@ exports.renderFile = function () {
       cpOptsInData(data, opts);
     }
   }
-  opts.filename = path;
+  opts.filename = filename;
 
   try {
     result = handleCache(opts)(data);
@@ -742,6 +1255,7 @@ function Template(text, opts) {
   options.context = opts.context;
   options.cache = opts.cache || false;
   options.rmWhitespace = opts.rmWhitespace;
+  options.root = opts.root;
   options.localsName = opts.localsName || exports.localsName || _DEFAULT_LOCALS_NAME;
 
   if (options.strict) {
@@ -757,39 +1271,28 @@ function Template(text, opts) {
 }
 
 Template.modes = {
-  EVAL: 'eval'
-, ESCAPED: 'escaped'
-, RAW: 'raw'
-, COMMENT: 'comment'
-, LITERAL: 'literal'
+  EVAL: 'eval',
+  ESCAPED: 'escaped',
+  RAW: 'raw',
+  COMMENT: 'comment',
+  LITERAL: 'literal'
 };
 
 Template.prototype = {
   createRegex: function () {
-    var str = _REGEX_STRING
-      , delim = utils.escapeRegExpChars(this.opts.delimiter);
+    var str = _REGEX_STRING;
+    var delim = utils.escapeRegExpChars(this.opts.delimiter);
     str = str.replace(/%/g, delim);
     return new RegExp(str);
-  }
+  },
 
-, compile: function () {
-    var src
-      , fn
-      , opts = this.opts
-      , prepended = ''
-      , appended = ''
-      , escape = opts.escapeFunction;
-
-    if (opts.rmWhitespace) {
-      // Have to use two separate replace here as `^` and `$` operators don't
-      // work well with `\r`.
-      this.templateText =
-        this.templateText.replace(/\r/g, '').replace(/^\s+|\s+$/gm, '');
-    }
-
-    // Slurp spaces and tabs before <%_ and after _%>
-    this.templateText =
-      this.templateText.replace(/[ \t]*<%_/gm, '<%_').replace(/_%>[ \t]*/gm, '_%>');
+  compile: function () {
+    var src;
+    var fn;
+    var opts = this.opts;
+    var prepended = '';
+    var appended = '';
+    var escape = opts.escapeFunction;
 
     if (!this.source) {
       this.generateSource();
@@ -866,20 +1369,34 @@ Template.prototype = {
     };
     returnedFn.dependencies = this.dependencies;
     return returnedFn;
-  }
+  },
 
-, generateSource: function () {
-    var self = this
-      , matches = this.parseTemplateText()
-      , d = this.opts.delimiter;
+  generateSource: function () {
+    var opts = this.opts;
+
+    if (opts.rmWhitespace) {
+      // Have to use two separate replace here as `^` and `$` operators don't
+      // work well with `\r`.
+      this.templateText =
+        this.templateText.replace(/\r/g, '').replace(/^\s+|\s+$/gm, '');
+    }
+
+    // Slurp spaces and tabs before <%_ and after _%>
+    this.templateText =
+      this.templateText.replace(/[ \t]*<%_/gm, '<%_').replace(/_%>[ \t]*/gm, '_%>');
+
+    var self = this;
+    var matches = this.parseTemplateText();
+    var d = this.opts.delimiter;
 
     if (matches && matches.length) {
       matches.forEach(function (line, index) {
-        var opening
-          , closing
-          , include
-          , includeOpts
-          , includeSrc;
+        var opening;
+        var closing;
+        var include;
+        var includeOpts;
+        var includeObj;
+        var includeSrc;
         // If this is an opening tag, check for closing tags
         // FIXME: May end up with some false positives here
         // Better to store modes as k/v with '<' + delimiter as key
@@ -897,9 +1414,23 @@ Template.prototype = {
           // Must be in EVAL or RAW mode
           if (opening && (opening == '<' + d || opening == '<' + d + '-' || opening == '<' + d + '_')) {
             includeOpts = utils.shallowCopy({}, self.opts);
-            includeSrc = includeSource(include[1], includeOpts);
-            includeSrc = '    ; (function(){' + '\n' + includeSrc +
-                '    ; })()' + '\n';
+            includeObj = includeSource(include[1], includeOpts);
+            if (self.opts.compileDebug) {
+              includeSrc =
+                  '    ; (function(){' + '\n'
+                  + '      var __line = 1' + '\n'
+                  + '      , __lines = ' + JSON.stringify(includeObj.template) + '\n'
+                  + '      , __filename = ' + JSON.stringify(includeObj.filename) + ';' + '\n'
+                  + '      try {' + '\n'
+                  + includeObj.source
+                  + '      } catch (e) {' + '\n'
+                  + '        rethrow(e, __lines, __filename, __line);' + '\n'
+                  + '      }' + '\n'
+                  + '    ; }).call(this)' + '\n';
+            }else{
+              includeSrc = '    ; (function(){' + '\n' + includeObj.source +
+                  '    ; }).call(this)' + '\n';
+            }
             self.source += includeSrc;
             self.dependencies.push(exports.resolveInclude(include[1],
                 includeOpts.filename));
@@ -910,19 +1441,17 @@ Template.prototype = {
       });
     }
 
-  }
+  },
 
-, parseTemplateText: function () {
-    var str = this.templateText
-      , pat = this.regex
-      , result = pat.exec(str)
-      , arr = []
-      , firstPos
-      , lastPos;
+  parseTemplateText: function () {
+    var str = this.templateText;
+    var pat = this.regex;
+    var result = pat.exec(str);
+    var arr = [];
+    var firstPos;
 
     while (result) {
       firstPos = result.index;
-      lastPos = pat.lastIndex;
 
       if (firstPos !== 0) {
         arr.push(str.substring(0, firstPos));
@@ -939,12 +1468,12 @@ Template.prototype = {
     }
 
     return arr;
-  }
+  },
 
-, scanLine: function (line) {
-    var self = this
-      , d = this.opts.delimiter
-      , newLineCount = 0;
+  scanLine: function (line) {
+    var self = this;
+    var d = this.opts.delimiter;
+    var newLineCount = 0;
 
     function _addOutput() {
       if (self.truncate) {
@@ -953,7 +1482,7 @@ Template.prototype = {
         // after the tag that the truncation mode replaces
         // Handle Win / Unix / old Mac linebreaks -- do the \r\n
         // combo first in the regex-or
-        line = line.replace(/^(?:\r\n|\r|\n)/, '')
+        line = line.replace(/^(?:\r\n|\r|\n)/, '');
         self.truncate = false;
       }
       else if (self.opts.rmWhitespace) {
@@ -998,6 +1527,10 @@ Template.prototype = {
       case '<' + d + d:
         this.mode = Template.modes.LITERAL;
         this.source += '    ; __append("' + line.replace('<' + d + d, '<' + d) + '")' + '\n';
+        break;
+      case d + d + '>':
+        this.mode = Template.modes.LITERAL;
+        this.source += '    ; __append("' + line.replace(d + d + '>', d + '>') + '")' + '\n';
         break;
       case d + '>':
       case '-' + d + '>':
@@ -1059,6 +1592,20 @@ Template.prototype = {
 };
 
 /**
+ * Escape characters reserved in XML.
+ *
+ * This is simply an export of {@link module:utils.escapeXML}.
+ *
+ * If `markup` is `undefined` or `null`, the empty string is returned.
+ *
+ * @param {String} markup Input string
+ * @return {String} Escaped string
+ * @public
+ * @func
+ * */
+exports.escapeXML = utils.escapeXML;
+
+/**
  * Express.js support.
  *
  * This is an alias for {@link module:ejs.renderFile}, in order to support
@@ -1072,14 +1619,14 @@ exports.__express = exports.renderFile;
 // Add require support
 /* istanbul ignore else */
 if (require.extensions) {
-  require.extensions['.ejs'] = function (module, filename) {
-    filename = filename || /* istanbul ignore next */ module.filename;
+  require.extensions['.ejs'] = function (module, flnm) {
+    var filename = flnm || /* istanbul ignore next */ module.filename;
     var options = {
-          filename: filename
-        , client: true
-        }
-      , template = fs.readFileSync(filename).toString()
-      , fn = exports.compile(template, options);
+          filename: filename,
+          client: true
+        };
+    var template = fs.readFileSync(filename).toString();
+    var fn = exports.compile(template, options);
     module._compile('module.exports = ' + fn.toString() + ';', filename);
   };
 }
@@ -1099,7 +1646,7 @@ if (typeof window != 'undefined') {
   window.ejs = exports;
 }
 
-},{"../package.json":8,"./utils":7,"fs":9,"path":10}],7:[function(require,module,exports){
+},{"../package.json":10,"./utils":9,"fs":11,"path":12}],9:[function(require,module,exports){
 /*
  * EJS Embedded JavaScript templates
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
@@ -1242,7 +1789,7 @@ exports.cache = {
 };
 
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports={
   "name": "ejs",
   "description": "Embedded JavaScript templates",
@@ -1251,7 +1798,7 @@ module.exports={
     "engine",
     "ejs"
   ],
-  "version": "2.4.1",
+  "version": "2.5.2",
   "author": {
     "name": "Matthew Eernisse",
     "email": "mde@fleegix.org",
@@ -1276,14 +1823,15 @@ module.exports={
   "homepage": "https://github.com/mde/ejs",
   "dependencies": {},
   "devDependencies": {
-    "browserify": "^8.0.3",
-    "istanbul": "~0.3.5",
+    "browserify": "^13.0.1",
+    "eslint": "^3.0.0",
+    "istanbul": "~0.4.3",
     "jake": "^8.0.0",
-    "jsdoc": "^3.3.0-beta1",
-    "lru-cache": "^2.5.0",
-    "mocha": "^2.1.0",
+    "jsdoc": "^3.4.0",
+    "lru-cache": "^4.0.1",
+    "mocha": "^3.0.2",
     "rimraf": "^2.2.8",
-    "uglify-js": "^2.4.16"
+    "uglify-js": "^2.6.2"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -1294,15 +1842,19 @@ module.exports={
     "doc": "rimraf out && jsdoc -c jsdoc.json lib/* docs/jsdoc/*",
     "devdoc": "rimraf out && jsdoc -p -c jsdoc.json lib/* docs/jsdoc/*"
   },
-  "_id": "ejs@2.4.1",
-  "_shasum": "82e15b1b2a1f948b18097476ba2bd7c66f4d1566",
-  "_resolved": "https://registry.npmjs.org/ejs/-/ejs-2.4.1.tgz",
+  "_id": "ejs@2.5.2",
+  "_shasum": "21444ba09386f0c65b6eafb96a3d51bcb3be80d1",
+  "_resolved": "https://registry.npmjs.org/ejs/-/ejs-2.5.2.tgz",
   "_from": "ejs@>=2.4.1 <3.0.0",
-  "_npmVersion": "2.10.1",
-  "_nodeVersion": "0.12.4",
+  "_npmVersion": "2.14.7",
+  "_nodeVersion": "4.2.2",
   "_npmUser": {
     "name": "mde",
     "email": "mde@fleegix.org"
+  },
+  "dist": {
+    "shasum": "21444ba09386f0c65b6eafb96a3d51bcb3be80d1",
+    "tarball": "https://registry.npmjs.org/ejs/-/ejs-2.5.2.tgz"
   },
   "maintainers": [
     {
@@ -1314,17 +1866,16 @@ module.exports={
       "email": "mde@fleegix.org"
     }
   ],
-  "dist": {
-    "shasum": "82e15b1b2a1f948b18097476ba2bd7c66f4d1566",
-    "tarball": "http://registry.npmjs.org/ejs/-/ejs-2.4.1.tgz"
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/ejs-2.5.2.tgz_1473259584869_0.9678213631268591"
   },
-  "directories": {},
-  "readme": "ERROR: No README data found!"
+  "directories": {}
 }
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1552,16 +2103,105 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":11}],11:[function(require,module,exports){
+},{"_process":13}],13:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -1577,7 +2217,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = setTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -1594,7 +2234,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    clearTimeout(timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -1606,7 +2246,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 

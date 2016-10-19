@@ -5,6 +5,7 @@ img{
 }
 
 .pizza-item{
+  position: relative;
   .type{
     color: gray;
   }
@@ -20,11 +21,20 @@ img{
     margin: auto;
     padding: 5px;
   }
-  .info-size{
-    margin-left: 30px;
-  }
   .currency{
     font-size:14px;
     margin: auto;
+  }
+  .description{
+    height: 60px;
+  }
+  .pizza-label{
+    position: absolute;
+    top: -11px;
+    right: 0;
+    font-size: 22px;
+  }
+  .pizza-small, .pizza-big{
+    text-align: center;
   }
 }
