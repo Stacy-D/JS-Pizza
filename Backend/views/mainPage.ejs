@@ -1,0 +1,56 @@
+<div class="discount-sticker">
+    <div class="sticker-elem"></div>
+    <div class="discount-text">
+        ЦЬОГО ТИЖНЯ НА ВСЕ
+    </div>
+    <div class="discount-amount">
+        -20%
+    </div>
+</div>
+<% include common/header.ejs %>
+
+<div class="main-container container-fluid">
+    <div class="row">
+        <div class="left-panel col-xs-6 col-sm-8  col-md-8 col-lg-9">
+            <div class="page-title">
+                <h2>
+                    <span class="title-text"> Усі піци</span>
+                    <span class="badge pizza-counter counter-color">8</span>
+                </h2>
+            </div>
+            <div class="all-pizza-type-wrap">
+                <ul class="nav nav-pills all-pizza-type">
+                    <li role="presentation" class="active pizza-filter-button" id="filter-button-all-pizza">
+                        <a href="#">
+                            Усі
+                        </a>
+                    </li>
+                    <li role="presentation" class="pizza-filter-button" id="filter-button-meat">
+                        <a href="#">
+                            Мясні
+                        </a>
+                    </li>
+                    <li role="presentation" class="pizza-filter-button" id="filter-button-pineapples">
+                        <a href="#">
+                            З ананасами
+                        </a>
+                    </li>
+                    <li role="presentation" class="pizza-filter-button" id="filter-button-mushrooms">
+                        <a href="#">
+                            З грибами
+                        </a>
+                    </li>
+                    <li role="presentation" class="pizza-filter-button" id="filter-button-seafood">
+                        <a href="#">
+                            З морепродуктами
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row list-pizza ">
+            </div>
+        </div>
+        <% include common/cart.ejs%>
+    </div>
+</div>
+<% include common/footer.ejs %>

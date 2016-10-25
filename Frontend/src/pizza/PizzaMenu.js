@@ -3,7 +3,6 @@
  */
 var Templates = require('../Templates');
 var PizzaCart = require('./PizzaCart');
-var Pizza_List = require('../Pizza_List');
 
 //HTML едемент куди будуть додаватися піци
 var $pizza_list = $(".list-pizza");
@@ -37,11 +36,11 @@ function showPizzaList(list) {
     $(".pizza-counter").text(list.length);
 }
 
-function filterPizza(filter) {
+function filterPizza(filter,pizza_list) {
     //Масив куди потраплять піци які треба показати
     var pizza_shown = [];
 
-    Pizza_List.forEach(function(pizza){
+    pizza_list.forEach(function(pizza){
         if(filter == 0){
         if(pizza.content.meat || pizza.content.chicken) {
             pizza_shown.push(pizza);
@@ -64,19 +63,19 @@ function filterPizza(filter) {
     showPizzaList(pizza_shown);
 }
 
-function initialiseMenu() {
+function initialiseMenu(pizza_list) {
     //Показуємо усі піци
-    showPizzaList(Pizza_List);
-    addFilters();
+    showPizzaList(pizza_list);
+    addFilters(pizza_list);
 
 
 }
-function addFilters() {
+function addFilters(pizza_list) {
     function filterbuttonClick(button,filter) {
         $(".pizza-filter-button").removeClass("active");
         $(button).addClass("active");
         $(".title-text").text("Піци "+$(button).text().toLowerCase());
-        filterPizza(filter);
+        filterPizza(filter,pizza_list);
     }
     $("#filter-button-meat").click(function (e) {
         filterbuttonClick("#filter-button-meat",filter.meat);
@@ -96,7 +95,7 @@ function addFilters() {
         $(".pizza-filter-button").removeClass("active");
         $("#filter-button-all-pizza").addClass("active");
         $(".title-text").text("Усі піци");
-        showPizzaList(Pizza_List);
+        showPizzaList(pizza_list);
     });
 }
 

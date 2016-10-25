@@ -3,7 +3,7 @@
  */
 var Templates = require('../Templates');
 var Storage = require('./Storage')
-
+var order_but = $(".button-order");
 //Перелік розмірів піци
 var PizzaSize = {
     Big: "big_size",
@@ -74,6 +74,9 @@ function initialiseCart() {
     //Тут можна наприклад, зчитати вміст корзини який збережено в Local Storage то показати його
     //TODO: ...
     $(".empty-cart").click(emptyCart);
+    order_but.click(function (e) {
+        window.location = "/order.html";
+    });
     updateCart();
 }
 
@@ -127,6 +130,12 @@ function updateCart() {
     }
     Cart.forEach(showOnePizzaInCart);
     $sumToPay.html(sum+" грн");
+    if(sum > 0){
+        order_but.removeAttr("disabled");
+    }
+    else{
+        order_but.attr("disabled", "disabled");
+    }
 }
 
 exports.removeFromCart = removeFromCart;
